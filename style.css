@@ -1,0 +1,46 @@
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  color: #fff;
+  text-align: center;
+  font-size: 48px;
+  margin-top: 75px;
+}
+
+a {
+  color: #6bbed8;
+}
+
+p  {
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+}
+
+footer {
+    background-color: #000; /* Optional: Add a background color to the footer */
+    text-align: center; /* Center the links horizontally */
+  }
+  
+.social-links {
+  list-style: none;
+  padding: 0;
+  text-align: center;
+}
+
+.social-links li {
+  display: inline;
+  margin: 0 10px;
+}
+
+.social-links a {
+  color: #fff; /* Set the color for the icons */
+  text-decoration: none;
+  font-size: 24px; /* Adjust the size of the icons */
+}
+
+/* Add more styles for other elements as needed */
