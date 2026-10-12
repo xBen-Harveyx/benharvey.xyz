@@ -7,7 +7,7 @@
   const FONT_SIZE = 12;      // character size, px
   const LINE_HEIGHT = 1.2;   // row height relative to FONT_SIZE
   const CONTRAST = 1.7;      // higher = more empty gaps and dense patches
-  const BASE_ALPHA = 0.11;   // how visible the field is away from the cursor
+  const BASE_ALPHA = 0.11;   // how visible the field is away from the cursor (or --ascii-alpha in CSS)
   const SPOT_ALPHA = 0.55;   // strength right under the cursor
   const SPOT_RADIUS = 140;   // spotlight radius, px
   const RIPPLE = 0.35;       // how much the cursor stirs the characters
@@ -37,6 +37,7 @@
   let lines = [];      // the characters on screen, one string per row
   let fill = "#888";
   let spotFill = "#888";
+  let baseAlpha = BASE_ALPHA;
   let pointer = null;  // { x, y } in px, or null while the cursor is away
   let time = 0;
   let last = 0;
@@ -60,6 +61,8 @@
   function readColors() {
     fill = gradient(ctx);
     spotFill = gradient(spotCtx);
+    const alpha = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--ascii-alpha"));
+    baseAlpha = Number.isFinite(alpha) ? alpha : BASE_ALPHA;
   }
 
   function resize() {
@@ -120,7 +123,7 @@
 
   function paint() {
     ctx.clearRect(0, 0, width, height);
-    ctx.globalAlpha = BASE_ALPHA;
+    ctx.globalAlpha = baseAlpha;
     ctx.fillStyle = fill;
     for (let r = 0; r < rows; r++) ctx.fillText(lines[r], 0, r * cellH);
     ctx.globalAlpha = 1;

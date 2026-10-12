@@ -1,12 +1,12 @@
 /* ---------- palette ----------
-   Monochrome: graphite ink and a few grays on ivory paper. The ASCII field
-   uses the graphite --grad-* tones; the one splash of color is the blue
-   gradient on the typed words after "I build". */
+   The home page is graphite on ivory paper. The blog and posts switch to
+   light text on near-black (data-theme="dark" on <html>). The ASCII field
+   uses the --grad-* tones at --ascii-alpha; the one splash of color is the
+   blue gradient on the typed words after "I build". */
 :root {
   --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --bg: #f3f0e8;
   --surface: #ece8de;
-  --surface-hover: #e5e0d4;
   --border: #d6d1c5;
   --border-strong: #b3aea2;
   --text: #1c1b19;
@@ -16,11 +16,61 @@
   --grad-from: #1c1b19;
   --grad-mid: #9a968d;
   --grad-to: #46443f;
+  --ascii-alpha: 0.11;
   --blue-from: #1e3a8a;
   --blue-mid: #2563eb;
   --blue-to: #0284c7;
   --blue-grad: linear-gradient(120deg, var(--blue-from), var(--blue-mid), var(--blue-to));
   --mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0a0a0a;
+  --surface: #181818;
+  --border: #272727;
+  --border-strong: #3d3d3d;
+  --text: #f2f2f2;
+  --muted: #b4b4b4;
+  --faint: #7c7c7c;
+  --accent: #f2f2f2;
+  --grad-from: #f2f2f2;
+  --grad-mid: #6e6e6e;
+  --grad-to: #b8b8b8;
+  --ascii-alpha: 0.09;
+  /* lighter blues, so typed words stay readable on black */
+  --blue-from: #a5c8ff;
+  --blue-mid: #60a5fa;
+  --blue-to: #38bdf8;
+}
+
+/* ---------- page transitions ----------
+   Home <-> blog: the new page wipes across the old one with a wide, soft
+   edge, so light fades into dark (and back) as it sweeps. transitions.js
+   tags which way; every other link keeps the default crossfade. Browsers
+   without cross-document view transitions just change pages. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+
+html:active-view-transition-type(to-blog, to-home)::view-transition-old(root) { animation: none; }
+html:active-view-transition-type(to-blog)::view-transition-new(root) {
+  -webkit-mask: linear-gradient(to left, #000 40%, transparent 60%) 0 0 / 300% 100% no-repeat;
+  mask: linear-gradient(to left, #000 40%, transparent 60%) 0 0 / 300% 100% no-repeat;
+  animation: wipe-from-right 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+html:active-view-transition-type(to-home)::view-transition-new(root) {
+  -webkit-mask: linear-gradient(to right, #000 40%, transparent 60%) 0 0 / 300% 100% no-repeat;
+  mask: linear-gradient(to right, #000 40%, transparent 60%) 0 0 / 300% 100% no-repeat;
+  animation: wipe-from-left 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@keyframes wipe-from-right {
+  from { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
+  to { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+}
+@keyframes wipe-from-left {
+  from { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  to { -webkit-mask-position: 0% 0; mask-position: 0% 0; }
 }
 
 /* ---------- base ---------- */
@@ -75,9 +125,7 @@ strong { font-weight: 600; }
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
-a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-/* Without a link color, links in running text need their underline. */
-.prose a, .page-head a { text-decoration: underline; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 code {
   font-family: var(--mono);
@@ -103,9 +151,7 @@ code {
 
 .lead { font-size: 1.05rem; font-weight: 600; margin: 0 0 0.2em; }
 .headline { font-size: 2.1rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 0.45em; }
-.intro { color: var(--muted); max-width: 500px; margin: 0 auto 24px; }
-.intro p { margin: 0 0 0.6em; text-wrap: balance; }
-.intro p:last-child { margin-bottom: 0; }
+.intro { max-width: 480px; margin: 0 auto 28px; font-size: 0.92rem; font-style: italic; line-height: 1.45; color: var(--muted); text-wrap: balance; }
 
 /* ---------- components rewritten from performative-ui (MIT) ----------
    https://performative-ui.cncl.co. Behavior lives in components.js. */
@@ -159,144 +205,160 @@ code {
 .link-btn svg { flex: none; width: 17px; height: 17px; }
 .link-btn:hover { text-decoration: none; color: var(--bg); background: var(--text); border-color: var(--text); }
 
-/* ---------- page header (inner pages) ---------- */
-.page-head { margin-bottom: 28px; }
-.page-head p { color: var(--muted); margin: 0; }
+/* ---------- back link at the top of the blog and posts ---------- */
+.topbar { max-width: 1120px; margin: 0 auto; padding-top: 28px; }
+.back { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--muted); }
+.back:hover { color: var(--text); text-decoration: none; }
+.back svg { width: 16px; height: 16px; }
 
-/* ---------- blog list ---------- */
-.search { margin-bottom: 12px; }
-.search input {
-  width: 100%;
-  padding: 10px 14px;
-  font: inherit;
-  color: var(--text);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-.search input::placeholder { color: var(--faint); }
-.search input:focus { outline: none; border-color: var(--accent); }
+/* ---------- blog list, after OpenAI News ---------- */
+.blog { max-width: 1120px; padding: 56px 0 96px; }
+/* Same size as the "I build" line on the home page */
+.blog-title { font-size: 2.1rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 24px; }
 
-.post-list { list-style: none; margin: 0; padding: 0; }
-.post-list li + li { border-top: 1px solid var(--border); }
-
-.post {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2px 16px;
-  margin: 0 -10px;
-  padding: 14px 10px;
-  color: var(--text);
-  border-radius: 8px;
-}
-.post:hover { text-decoration: none; background: var(--surface); }
-.post-title { font-weight: 600; }
-.post time { color: var(--faint); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
-.post-desc { grid-column: 1 / -1; color: var(--muted); font-size: 0.9rem; }
-
-.empty { color: var(--muted); text-align: center; padding: 24px 0; }
-
-/* ---------- projects ---------- */
-.project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-
-.project {
+/* Category tabs, built by script.js from each post's data-category */
+.tabs {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 18px;
-  color: var(--text);
+  gap: 8px 28px;
+  margin-bottom: 40px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab {
+  flex: none;
+  padding: 0;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--faint);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.tab:hover, .tab[aria-pressed="true"] { color: var(--text); }
+
+/* As many ~150px cards per row as fit: about six on a desktop, two on a phone. */
+.post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 36px 18px; margin: 0; padding: 0; list-style: none; }
+
+/* Shown only while the list is empty */
+.blog-empty { color: var(--faint); }
+.post-grid:has(li) ~ .blog-empty { display: none; }
+
+.post-card { display: block; color: var(--text); }
+.post-card:hover { text-decoration: none; }
+.post-title { display: block; margin-bottom: 8px; font-size: 0.95rem; line-height: 1.45; letter-spacing: -0.01em; text-wrap: pretty; }
+.post-meta { display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: 0.8rem; }
+.post-meta time { color: var(--faint); }
+
+/* Square covers: put an <img> inside to use a picture, otherwise the cards
+   cycle through six soft gradients. */
+.cover {
+  display: block;
+  aspect-ratio: 1;
+  margin-bottom: 12px;
+  overflow: hidden;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  transition: border-color 0.15s, background 0.15s;
+  border-radius: 6px;
+  transition: opacity 0.25s;
 }
-.project:hover { text-decoration: none; background: var(--surface-hover); border-color: var(--accent); }
-.project h2 { font-size: 1rem; margin: 0; }
-.project p { flex: 1; margin: 0; color: var(--muted); font-size: 0.9rem; }
+.cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.post-card:hover .cover { opacity: 0.85; }
 
-.project-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.post-grid > li:nth-child(6n + 1) .cover:empty { background: radial-gradient(90% 80% at 20% 20%, #a5c8ff, transparent 60%), radial-gradient(80% 80% at 85% 80%, #2f5bd3, transparent 65%), linear-gradient(150deg, #23345e, #0d1424); }
+.post-grid > li:nth-child(6n + 2) .cover:empty { background: radial-gradient(85% 75% at 25% 25%, #ececec, transparent 60%), radial-gradient(80% 90% at 80% 85%, #5b616e, transparent 65%), linear-gradient(140deg, #3a3d45, #141518); }
+.post-grid > li:nth-child(6n + 3) .cover:empty { background: radial-gradient(80% 80% at 20% 85%, #6fe3d2, transparent 60%), radial-gradient(85% 75% at 80% 15%, #6aa8ff, transparent 60%), linear-gradient(160deg, #1c3d5c, #0b1a2a); }
+.post-grid > li:nth-child(6n + 4) .cover:empty { background: radial-gradient(80% 70% at 75% 25%, #b9c3ff, transparent 60%), radial-gradient(90% 85% at 20% 80%, #4b3fd0, transparent 65%), linear-gradient(140deg, #231f55, #0e0c22); }
+.post-grid > li:nth-child(6n + 5) .cover:empty { background: radial-gradient(85% 80% at 30% 20%, #d5dde8, transparent 60%), radial-gradient(80% 80% at 80% 85%, #34445c, transparent 65%), linear-gradient(150deg, #263244, #0e141d); }
+.post-grid > li:nth-child(6n + 6) .cover:empty { background: radial-gradient(80% 75% at 80% 20%, #e3f4ff, transparent 55%), radial-gradient(90% 85% at 20% 80%, #2fa3e6, transparent 65%), linear-gradient(160deg, #0f4a70, #072235); }
 
-.tags { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
-.tags li {
-  padding: 1px 8px;
-  font-size: 0.75rem;
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
+/* ---------- post pages, after OpenAI's article layout ---------- */
+.article { max-width: 1120px; padding: 72px 0 112px; }
+
+.article-head { max-width: 760px; margin: 0 auto; text-align: center; }
+.article-meta { display: flex; justify-content: center; gap: 14px; margin-bottom: 26px; font-size: 0.9rem; }
+.article-meta span { color: var(--faint); }
+.article-head h1 { margin: 0 0 22px; font-size: clamp(2.4rem, 6vw, 3.6rem); font-weight: 500; line-height: 1.08; letter-spacing: -0.03em; text-wrap: balance; }
+.dek { max-width: 560px; margin: 0 auto; font-size: 1.05rem; text-wrap: balance; }
+
+.article-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 620px;
+  margin: 72px auto 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
 }
-
-/* GitHub star count (filled in live by components.js) */
-.stars {
+.listen, .share {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  margin-left: auto;
-  padding: 1px 8px;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
+  gap: 10px;
+  padding: 0;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text);
+  background: none;
+  border: 0;
+  cursor: pointer;
 }
-.stars svg { width: 12px; height: 12px; color: var(--accent); }
+.share { margin-left: auto; }
+.share svg { width: 15px; height: 15px; }
+.share:hover .share-label { text-decoration: underline; text-underline-offset: 3px; }
 
-/* ---------- resume ---------- */
-.job { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; padding: 12px 0; }
-.job + .job { border-top: 1px solid var(--border); }
-.job .org { color: var(--muted); font-weight: 400; }
-.job .when { color: var(--faint); font-size: 0.85rem; white-space: nowrap; }
-.job ul { grid-column: 1 / -1; margin: 8px 0 0; padding-left: 1.1em; color: var(--muted); }
-.job li { margin: 2px 0; }
+.listen-icon { display: grid; place-items: center; width: 30px; height: 30px; background: var(--surface); border-radius: 50%; transition: background 0.15s; }
+.listen:hover .listen-icon { background: var(--border-strong); }
+.listen-icon svg { width: 12px; height: 12px; }
+.listen .icon-pause, .listen.is-playing .icon-play { display: none; }
+.listen.is-playing .icon-pause { display: block; }
+.listen-time { padding-left: 12px; color: var(--muted); border-left: 1px solid var(--border); font-variant-numeric: tabular-nums; }
 
-.chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; }
-.chips li {
-  padding: 3px 10px;
-  font-size: 0.85rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-}
+/* Sidebar contents on the left, reading column in the middle */
+.article-layout { display: grid; grid-template-columns: 1fr minmax(0, 620px) 1fr; column-gap: 40px; margin-top: 56px; }
 
-/* ---------- blog posts ---------- */
-.prose .meta { color: var(--faint); font-size: 0.875rem; margin-bottom: 28px; }
-.prose ol, .prose ul { padding-left: 1.3em; }
-.prose li { margin: 4px 0; }
+.toc { position: sticky; top: 32px; grid-column: 1; align-self: start; justify-self: start; max-width: 200px; font-size: 0.8rem; }
+.toc a { display: block; padding: 4px 0; line-height: 1.35; color: var(--faint); }
+.toc a:hover { color: var(--text); text-decoration: none; }
+.toc a.is-active { color: var(--text); }
+.toc a.sub { padding-left: 12px; }
 
-/* ---------- footer ---------- */
-footer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 16px;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 20px 0 40px;
-  border-top: 1px solid var(--border);
-  color: var(--faint);
-  font-size: 0.85rem;
-}
-footer a { color: var(--muted); }
-footer a:hover { color: var(--text); }
+.article-body { grid-column: 2; font-size: 1.06rem; line-height: 1.7; }
+.article-body p { margin: 0 0 1.2em; }
+.article-body h2 { margin: 2.2em 0 0.6em; font-size: 1.5rem; font-weight: 500; letter-spacing: -0.01em; scroll-margin-top: 24px; }
+.article-body h3 { margin: 1.8em 0 0.5em; font-size: 1.15rem; font-weight: 500; scroll-margin-top: 24px; }
+.article-body ul, .article-body ol { margin: 0 0 1.2em; padding-left: 1.3em; }
+.article-body li { margin: 0.4em 0; }
+.article-body a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
 /* ---------- small screens ---------- */
+@media (max-width: 1000px) {
+  .article-layout { grid-template-columns: minmax(0, 620px); justify-content: center; }
+  .toc { display: none; }
+  .article-body { grid-column: 1; }
+}
+
 @media (max-width: 600px) {
   main { padding-top: 40px; }
   .home { padding-top: 48px; }
-
-  .project-grid { grid-template-columns: 1fr; }
-
   .headline { font-size: 1.6rem; }
+
+  .blog { padding-top: 36px; }
+  .blog-title { font-size: 1.6rem; }
+
+  .article { padding-top: 44px; }
+  .article-bar { margin-top: 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .link-btn, .project { transition: none; }
+  .link-btn, .tab, .cover, .listen-icon { transition: none; }
   .grad-text, .rotator-cursor { animation: none; }
 }
 
 @media print {
-  :root {
+  :root, [data-theme] {
     --bg: #fff; --surface: #fff; --text: #000; --muted: #333; --faint: #555; --border: #ccc; --accent: #000;
   }
   main { padding-top: 0; }
-  footer, .search, .bg-ascii { display: none; }
+  .topbar, .bg-ascii, .article-bar, .toc { display: none; }
 }

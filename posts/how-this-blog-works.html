@@ -1,34 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-page="post">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>How this blog works &ndash; Your Name</title>
+  <title>How this blog works &ndash; Ben</title>
+  <meta name="description" content="No generator, no database, no build step. Just HTML files and stubbornness.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="../style.css">
+  <script src="../transitions.js"></script>
   <script src="../script.js" defer></script>
   <script src="../ascii.js" defer></script>
 </head>
 <body>
-  <main class="prose">
-    <h1>How this blog works</h1>
-    <p class="meta"><time datetime="2026-09-28">Sep 28, 2026</time></p>
+  <header class="topbar">
+    <a class="back" href="../blog.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Blog
+    </a>
+  </header>
 
-    <p>There's no static site generator, no build step, and no database. Every post is just an HTML file in the <code>posts/</code> folder.</p>
+  <main class="article">
+    <article>
+      <header class="article-head">
+        <p class="article-meta"><time datetime="2026-09-28">Sep 28, 2026</time><span>Meta</span></p>
+        <h1>How this blog works</h1>
+        <p class="dek">No generator, no database, no build step. Just HTML files and stubbornness.</p>
+        <div class="article-bar">
+          <button class="listen" type="button" hidden>
+            <span class="listen-icon">
+              <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg>
+            </span>
+            <span class="listen-label">Listen to article</span>
+            <span class="listen-time"></span>
+          </button>
+          <button class="share" type="button" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span class="share-label">Share</span>
+          </button>
+        </div>
+      </header>
 
-    <h2>Adding a post</h2>
-    <ol>
-      <li>Copy this file, rename it, and replace the title, date, and body.</li>
-      <li>Add a new <code>&lt;li&gt;</code> to the top of the list in <code>blog.html</code>.</li>
-    </ol>
+      <div class="article-layout">
+        <nav class="toc" aria-label="On this page" hidden></nav>
 
-    <p>That's it. Upload the files and the post is live. The search box on the blog page picks up new entries automatically.</p>
+        <div class="article-body">
+          <p>There's no static site generator, no build step, and no database. Every post is an HTML file in the <code>posts/</code> folder, and the blog page is a list of links I update by hand, like it's 1998.</p>
+
+          <h2>Writing a post</h2>
+          <p>I copy an old post, rename it, and change the bits at the top:</p>
+          <ul>
+            <li>The <strong>title</strong>, in both the <code>&lt;title&gt;</code> tag and the <code>&lt;h1&gt;</code>, because I will absolutely forget one of them.</li>
+            <li>The <strong>date</strong> and <strong>category</strong> above the title.</li>
+            <li>The one-line <strong>subtitle</strong> under it, which is usually where the joke goes.</li>
+          </ul>
+          <p>Then I delete the old paragraphs and write new ones. That's the whole content management system.</p>
+
+          <h2>Adding it to the blog</h2>
+          <p>A new <code>&lt;li&gt;</code> goes at the top of the list in <code>blog.html</code>, with the same title, date, and category. A new category gets its own tab automatically. Each card gets one of six gradient covers, or a picture if I can be bothered to find one.</p>
+
+          <h2>Sections and the sidebar</h2>
+          <p>Every <code>&lt;h2&gt;</code> in a post shows up in the sidebar on wide screens, and it highlights the section you're reading, so you always know how far you are from being done. Posts with fewer than two headings don't get a sidebar, because a table of contents with one item is just a title.</p>
+          <h3>A subsection, for demonstration purposes</h3>
+          <p>This is an <code>&lt;h3&gt;</code>. It shows up indented in the sidebar. That's it. That's the whole subsection.</p>
+
+          <h2>Listening and sharing</h2>
+          <p><strong>Listen to article</strong> uses your browser's built-in voice to read the post aloud. Depending on your browser, it sounds anywhere from fine to a GPS reading a eulogy. The time next to it is a guess based on length. <strong>Share</strong> copies the link, or opens the share menu on a phone.</p>
+          <p>Then I push it to GitHub and it's live. Nothing to deploy, nothing to patch, nothing to page me about.</p>
+        </div>
+      </div>
+    </article>
   </main>
-
-  <footer>
-    <a href="../blog.html">&larr; All posts</a>
-  </footer>
 </body>
 </html>

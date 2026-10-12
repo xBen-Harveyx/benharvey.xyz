@@ -1,30 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark" data-page="post">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Why plain HTML? &ndash; Your Name</title>
+  <title>Why plain HTML? &ndash; Ben</title>
+  <meta name="description" content="Because I wanted a website, not a second job.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="../style.css">
+  <script src="../transitions.js"></script>
   <script src="../script.js" defer></script>
   <script src="../ascii.js" defer></script>
 </head>
 <body>
-  <main class="prose">
-    <h1>Why plain HTML?</h1>
-    <p class="meta"><time datetime="2026-09-14">Sep 14, 2026</time></p>
+  <header class="topbar">
+    <a class="back" href="../blog.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Blog
+    </a>
+  </header>
 
-    <p>A personal site is a handful of pages that change a few times a month. It doesn't need a bundler, a package manager, or three hundred megabytes of dependencies.</p>
+  <main class="article">
+    <article>
+      <header class="article-head">
+        <p class="article-meta"><time datetime="2026-09-14">Sep 14, 2026</time><span>Opinion</span></p>
+        <h1>Why plain HTML?</h1>
+        <p class="dek">Because I wanted a website, not a second job.</p>
+        <div class="article-bar">
+          <button class="listen" type="button" hidden>
+            <span class="listen-icon">
+              <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg>
+            </span>
+            <span class="listen-label">Listen to article</span>
+            <span class="listen-time"></span>
+          </button>
+          <button class="share" type="button" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <span class="share-label">Share</span>
+          </button>
+        </div>
+      </header>
 
-    <p>Plain HTML loads instantly, works without JavaScript, and will still open in a browser twenty years from now. When something breaks, there are only three files to look at.</p>
+      <div class="article-layout">
+        <nav class="toc" aria-label="On this page" hidden></nav>
 
-    <p>Write the content. Style it once. Move on.</p>
+        <div class="article-body">
+          <p>A personal site is a handful of pages that change a few times a month. It does not need a bundler, a package manager, and three hundred megabytes of dependencies to tell you my name is Ben.</p>
+          <p>My day job is in a NOC, so I've learned what happens when a system has too many moving parts: eventually one of them moves at 3 a.m. I'd rather my website didn't have any.</p>
+          <p>Plain HTML loads instantly, doesn't care if JavaScript is turned off, and will still open in a browser twenty years from now, long after this week's framework has been deprecated, forked, and abandoned. Twice. When something breaks, there are only a handful of files to blame.</p>
+          <p>Write the post. Style it once. Log off.</p>
+        </div>
+      </div>
+    </article>
   </main>
-
-  <footer>
-    <a href="../blog.html">&larr; All posts</a>
-  </footer>
 </body>
 </html>

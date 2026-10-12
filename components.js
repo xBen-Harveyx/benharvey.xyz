@@ -1,6 +1,5 @@
-// Interactive pieces rewritten in plain JavaScript from performative-ui
-// (MIT, https://performative-ui.cncl.co): Rotator and live GitHub star
-// counts.
+// The Rotator, rewritten in plain JavaScript from performative-ui (MIT,
+// https://performative-ui.cncl.co).
 const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Rotator: types a word, holds it, deletes it, moves on to the next.
@@ -13,10 +12,11 @@ document.querySelectorAll(".rotator").forEach((el) => {
   const DELETE_MS = 32;
   const HOLD_MS = 1500;
 
-  // Screen readers get the whole list once instead of every keystroke.
+  // Screen readers hear it once instead of every keystroke: data-label if
+  // given (so a heading keeps a fixed name), otherwise the whole list.
   const label = document.createElement("span");
   label.className = "sr-only";
-  label.textContent = words.join(", ");
+  label.textContent = el.dataset.label || words.join(", ");
   el.after(label);
   el.setAttribute("aria-hidden", "true");
 
@@ -56,29 +56,4 @@ document.querySelectorAll(".rotator").forEach((el) => {
     }
   }
   tick();
-});
-
-// Star counts: give a project's .stars a data-repo="owner/name" and the
-// number is fetched from GitHub (cached for the visit to stay under the
-// API's rate limit). Without one, the number written in the HTML stays.
-document.querySelectorAll(".stars[data-repo]").forEach(async (el) => {
-  const repo = el.dataset.repo;
-  if (!repo) return;
-
-  const key = `stars:${repo}`;
-  let count = null;
-  try { count = sessionStorage.getItem(key); } catch {}
-
-  if (count === null) {
-    try {
-      const res = await fetch(`https://api.github.com/repos/${repo}`);
-      if (!res.ok) return;
-      count = (await res.json()).stargazers_count;
-      try { sessionStorage.setItem(key, count); } catch {}
-    } catch {
-      return;
-    }
-  }
-
-  el.querySelector(".stars-count").textContent = Number(count).toLocaleString();
 });
